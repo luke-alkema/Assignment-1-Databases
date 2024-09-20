@@ -33,11 +33,11 @@ int updateProduct(int lineNumber, char* fileName, char* newProductInformation);
 
 int main(void)
 {
-
+	
 
 	char fileName[MAX_STRING_LENGTH] = "CSVInventory.csv";												// File pointer to navigate files with 
 	const char* newProductToInsert = "5, Emergency Disco Ball, Food, 85, 29.99";					    // Holds string of data to be inserted into CSV file 
-	const char* otherProductToInsert = "2, Laptop, Electronics, 22, 35.00";
+	const char* otherProductToInsert = ",,,,";
 	const char* updatedProductInformation = "3, Rival Bracelet, Clothing, 215, 5.99";					// Holds string of data to update a current line with in the CSV file 
 
 
