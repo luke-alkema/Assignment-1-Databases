@@ -21,5 +21,11 @@
     <ClCompile Include="CSV.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SequentialAccess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomAccess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
