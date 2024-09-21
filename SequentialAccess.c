@@ -30,7 +30,7 @@ int updateProduct(struct Products* tempProducts, struct Products updatedProduct)
 struct Products {
 	int productID;
 	char productName[STRINGSIZE];
-	char productCatagory[STRINGSIZE];
+	char productCategory[STRINGSIZE];
 	int productQuantity;
 	double productPrice;
 };
@@ -123,7 +123,7 @@ void printMemory(struct Products* tempProducts)
 		if (tempProducts[i].productID > 0) //If ID is a valid value
 		{
 			printf("Product Id: %d\nProduct Name: %s\nProduct Catagory: %s\nQuantity: %d\nPrice: %.2f\n"
-				, tempProducts[i].productID, tempProducts[i].productName, tempProducts[i].productCatagory, tempProducts[i].productQuantity
+				, tempProducts[i].productID, tempProducts[i].productName, tempProducts[i].productCategory, tempProducts[i].productQuantity
 				, tempProducts[i].productPrice); //Print product information
 		}
 	}
@@ -197,7 +197,7 @@ int deleteProduct(struct Products* tempProducts, int productId)
 			//Empties that product's spot in the array
 			tempProducts[i].productID = NULL;
 			strcpy(tempProducts[i].productName, "\0");
-			strcpy(tempProducts[i].productCatagory, "\0");
+			strcpy(tempProducts[i].productCategory, "\0");
 			tempProducts[i].productQuantity = NULL;
 			tempProducts[i].productPrice = 0;
 			return SUCCESS;
@@ -224,7 +224,7 @@ int updateProduct(struct Products* tempProducts, struct Products updatedProduct)
 		{
 			//Update product information
 			strcpy(tempProducts[i].productName, updatedProduct.productName);
-			strcpy(tempProducts[i].productCatagory, updatedProduct.productCatagory);
+			strcpy(tempProducts[i].productCategory, updatedProduct.productCategory);
 			tempProducts[i].productQuantity = updatedProduct.productQuantity;
 			tempProducts[i].productPrice = updatedProduct.productPrice;
 			return SUCCESS;
