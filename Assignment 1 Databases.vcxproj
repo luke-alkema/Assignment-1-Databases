@@ -130,7 +130,6 @@
     <ClCompile Include="CSV.c" />
     <ClCompile Include="RandomAccess.c" />
     <ClCompile Include="SequentialAccess.c" />
-    <ClCompile Include="Source.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
