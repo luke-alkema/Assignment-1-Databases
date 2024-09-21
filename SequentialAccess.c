@@ -38,50 +38,51 @@ struct Products {
 int main()
 {
 	FILE* fp = { NULL };
+	//Creating sample products
 	struct Products* tempProducts = (struct Products*)malloc(sizeof(struct Products[DATABASESIZE]));
 	struct Products newProduct = { 1, "Laptop", "Electronics", 40, 2200.78 };
 	struct Products updatedProduct = { 1, "Dell Laptop", "Electronics", 35 , 2256.34 };
 	int productToDelete = 0;
 
-	if ((fp = fopen(FILENAME, "r+b")) == NULL)
+	if ((fp = fopen(FILENAME, "r+b")) == NULL) //If file fails to open
 	{
-		printf("Failed to Open file closing program");
+		printf("Failed to Open file; closing program");
 		return 0;
 	}
 
-	readFromFile(fp, tempProducts);
+	readFromFile(fp, tempProducts); //Reads file information into an array of structs
 
-	if (addProduct(tempProducts, newProduct) == ERROR)
+	if (addProduct(tempProducts, newProduct) == ERROR) //Add products to database
 	{
-		printf("There was a problem adding your product to the Database...");
+		printf("There was a problem adding your product to the Database..."); //If products were unable to be added
 	}
 	
 
-	if (deleteProduct(tempProducts, productToDelete) == ERROR)
+	if (deleteProduct(tempProducts, productToDelete) == ERROR) //Deletes a product
 	{
-		printf("There was a problem deleting your product from the Database...");
+		printf("There was a problem deleting your product from the Database..."); //If product was not able to be deleted
 	}
 	
 
-	if (updateProduct(tempProducts, updatedProduct) == ERROR)
+	if (updateProduct(tempProducts, updatedProduct) == ERROR) //Updating an already existing product
 	{
-		printf("There was a problem with updating your product in the Database...");
+		printf("There was a problem with updating your product in the Database..."); //If product was not able to be updated
 	}
 
-	printMemory(tempProducts);
+	printMemory(tempProducts); //Print current products
 
-	if (writeToFile(fp, tempProducts) < 1)
+	if (writeToFile(fp, tempProducts) < 1) //Write any changes to the file
 	{
-		printf("Nothing was written to the file. (Is there anything in memory?)")
+		printf("Nothing was written to the file. (Is there anything in memory?)"); //If nothing was changed
 	}
 
-	if (fclose(fp) == 0)
+	if (fclose(fp) == 0) //Closing the file
 	{
 		printf("File closed successfully! Thank you!");
 		return 0;
 	}
 
-	free(tempProducts);
+	free(tempProducts); //Free used space
 
 	return 1;
 }
@@ -95,14 +96,14 @@ int main()
 */
 void readFromFile(FILE* filePointer, struct Products* tempProducts)
 {
-	fseek(filePointer, 0, SEEK_SET);
-	struct Products temp = { NULL };
-	for (int i = 0; i <= DATABASESIZE; i++)
+	fseek(filePointer, 0, SEEK_SET); //Setting the file pointer
+	struct Products temp = { NULL }; //Creating a temporary struct
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		fread(&temp, sizeof(struct Products), 1, filePointer);
-		if (temp.productID > 0)
+		fread(&temp, sizeof(struct Products), 1, filePointer); //Reads from file
+		if (temp.productID > 0) //If the ID is a valid ID
 		{
-			tempProducts[i] = temp;
+			tempProducts[i] = temp; //Places product into temporary array
 		}
 	}
 }
@@ -117,13 +118,13 @@ void readFromFile(FILE* filePointer, struct Products* tempProducts)
 */
 void printMemory(struct Products* tempProducts)
 {
-	for (int i = 0; i <= DATABASESIZE; i++)
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		if (tempProducts[i].productID > 0)
+		if (tempProducts[i].productID > 0) //If ID is a valid value
 		{
 			printf("Product Id: %d\nProduct Name: %s\nProduct Catagory: %s\nQuantity: %d\nPrice: %.2f\n"
 				, tempProducts[i].productID, tempProducts[i].productName, tempProducts[i].productCatagory, tempProducts[i].productQuantity
-				, tempProducts[i].productPrice);
+				, tempProducts[i].productPrice); //Print product information
 		}
 	}
 }
@@ -138,15 +139,15 @@ void printMemory(struct Products* tempProducts)
 */
 int writeToFile(FILE* fp, struct Products* tempProducts)
 {
-	fseek(fp, 0, SEEK_SET);
-	struct Products temp = { NULL };
+	fseek(fp, 0, SEEK_SET); //Sets file pointer
+	struct Products temp = { NULL }; //Creates a temporary struct
 	int counter = 0;
-	for (int i = 0; i <= DATABASESIZE; i++)
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		temp = tempProducts[i];
-		if (temp.productID != 0)
+		temp = tempProducts[i]; //Sets values in temporary arrays
+		if (temp.productID != 0) //If ID is a valid value
 		{
-			fwrite(&temp, sizeof(struct Products), 1, fp);
+			fwrite(&temp, sizeof(struct Products), 1, fp); //Write product information
 			counter++;
 		}
 	}
@@ -163,20 +164,20 @@ int writeToFile(FILE* fp, struct Products* tempProducts)
 */
 int addProduct(struct Products* tempProducts,struct Products newProduct)
 {
-	if (newProduct.productID == NULL)
+	if (newProduct.productID == NULL) //If new product is empty
 	{
 		return ERROR;
 	}
 
-	for (int i = 0; i <= DATABASESIZE; i++)
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		if (tempProducts[i].productID < 1)
+		if (tempProducts[i].productID < 1) //If spot in array is empty
 		{
-			tempProducts[i] = newProduct;
+			tempProducts[i] = newProduct; //Write product to spot in array
 			return SUCCESS;
 		}
 	}
-	return ERROR;
+	return ERROR; //If writing product failed
 }
 
 /*
@@ -189,10 +190,11 @@ int addProduct(struct Products* tempProducts,struct Products newProduct)
 */
 int deleteProduct(struct Products* tempProducts, int productId)
 {
-	for (int i = 0; i <= DATABASESIZE; i++)
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		if (tempProducts[i].productID == productId)
+		if (tempProducts[i].productID == productId) //If product ID is equal to that of product to be deleted
 		{
+			//Empties that product's spot in the array
 			tempProducts[i].productID = NULL;
 			strcpy(tempProducts[i].productName, "\0");
 			strcpy(tempProducts[i].productCatagory, "\0");
@@ -201,7 +203,7 @@ int deleteProduct(struct Products* tempProducts, int productId)
 			return SUCCESS;
 		}
 	}
-	return ERROR;
+	return ERROR; //If product could not be deleted
 }
 
 
@@ -216,10 +218,11 @@ int deleteProduct(struct Products* tempProducts, int productId)
 int updateProduct(struct Products* tempProducts, struct Products updatedProduct)
 {
 
-	for (int i = 0; i <= DATABASESIZE; i++)
+	for (int i = 0; i <= DATABASESIZE; i++) //Loops through file
 	{
-		if (tempProducts[i].productID == updatedProduct.productID)
+		if (tempProducts[i].productID == updatedProduct.productID) //If ID is equal to that of product to be updated
 		{
+			//Update product information
 			strcpy(tempProducts[i].productName, updatedProduct.productName);
 			strcpy(tempProducts[i].productCatagory, updatedProduct.productCatagory);
 			tempProducts[i].productQuantity = updatedProduct.productQuantity;
@@ -227,5 +230,5 @@ int updateProduct(struct Products* tempProducts, struct Products updatedProduct)
 			return SUCCESS;
 		}
 	}
-	return ERROR;
+	return ERROR; //If product could not be updated.
 }
