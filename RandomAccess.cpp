@@ -7,74 +7,31 @@
 *				information. This "database" relies on the product having a valid productID to perform all operations.
 */
 
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "headerFile.h"
+
 #pragma warning (disable: 4996)
 
-#define FILENAME "RandomAccessFile.dat"
-#define STRINGSIZE 50
-#define SUCCESS 0
-#define ERROR 1
-#define NOT_USED 2
-#define IS_USED 3
-#define PRODUCT_STANDARD 4
-#define UNKNOWN_ERROR 5
 
-//Structure
-typedef struct{
-	int productId;
-	char productName[STRINGSIZE];
-	char productCatagory[STRINGSIZE];
-	int productQuantity;
-	double productPrice;
-	bool isDeleted;
-}Products;
+int updateProductRA(Products updatedProduct, FILE* fp);
+int searchForID(FILE* fp, int productId);
+int isError(int errorCode);
 
-//Function Prototypes
-int addProduct(Products newProduct, FILE* fp);
-int deleteProduct(int productId, FILE* fp);
-int updateProduct(Products updatedProduct, FILE* fp);
-int printByProductId(int productId, FILE* fp);
-int searchForId(FILE* fp, int productId);
-void isError(int errorCode);
 
-int main() {
-	FILE* fp = NULL;
 
-	Products defaultLaptop = { 1, "Laptop", "Electronics", 40, 2200.78, false };
-	Products smartPhone = { 2, "Smartphone", "Electronics", 50, 999.99, false };
-	Products updatedProduct = { 1, "Dell Laptop", "Electronics", 35, 2256.34, false };
-	int productToDelete = 1;
 
-	if ((fp = fopen(FILENAME, "r+b")) == NULL) {
-		printf("Failed to open file, closing program.\n");
-		return 0;
-	}
 
-	// Add new products
-	isError(addProduct(defaultLaptop, fp));
-	isError(addProduct(smartPhone, fp));
 
-	//Display products
-	isError(printByProductId(defaultLaptop.productId, fp));
 
-	isError(printByProductId(smartPhone.productId, fp));
 
-	//Update Laptop to Dell Laptop
-	isError(updateProduct(updatedProduct, fp));
-	//Display new output
-	isError(printByProductId(1, fp));
-	//Delete Smartphone
-	isError(deleteProduct(smartPhone.productId, fp));
-	
-	//Show it wont print
-	isError(printByProductId(2, fp));
 
-	fclose(fp);
-	return 1;
-}
+
+
 
 /*
 * Function		:isError(int errorCode)
@@ -82,35 +39,60 @@ int main() {
 * Parameters	:int errorCode, an integer representing the error code constant
 * Returns		:void
 */
-void isError(int errorCode) {
-	switch (errorCode) {
-	case ERROR: {
-		printf("Requested operation resulted in an error\n");
-		exit(ERROR);
+
+int isError(int errorCode)
+{
+
+	switch (errorCode)
+	{
+
+	case ERROR:
+	{
+
+		printf("ERROR: Requested operation resulted in an error\n");
+		return ERROR;
 		break;
+
 	}
-	case NOT_USED: {
-		printf("Error: The id given does not match any product id\n");
-		exit(NOT_USED);
+	case NOT_USED:
+	{
+
+		printf("ERROR: The ID given does not match any product id\n");
+		return NOT_USED;
 		break;
+
 	}
-	case IS_USED: {
-		printf("Error: The id given is already in use by another product\n");
-		exit(IS_USED);
+	case IS_USED:
+	{
+
+		printf("ERROR: The ID given is already in use by another product\n");
+		return IS_USED;
 		break;
+
 	}
-	case SUCCESS: {
+	case SUCCESS:
+	{
+
 		return SUCCESS;
+		break;
+
 	}
-	case PRODUCT_STANDARD: {
-		exit(PRODUCT_STANDARD);
+	case PRODUCT_STANDARD:
+	{
+
+		return PRODUCT_STANDARD;
+		break;
+
 	}
 	default:
-		printf("Unknown Error Occurred\n");
-		exit(UNKNOWN_ERROR);
+
+		printf("ERROR: Unknown Error Occurred\n");
+		return UNKNOWN_ERROR;
 		break;
 	}
 }
+
+
 
 /*
 * Function		:printByProductId(int productId, FILE* fp)
@@ -119,26 +101,45 @@ void isError(int errorCode) {
 *				:FILE* fp, a file pointer to the database file
 * Returns		:int, an integer representing the success or error code
 */
-int printByProductId(int productId, FILE* fp) {
+
+int printByRAProductID(int productId, FILE* fp)
+{
+
 	int idStatus = 0;
 	Products tempProduct = { 0 };
-	idStatus = searchForId(fp, productId);
-	if (idStatus == ERROR) {
+
+
+
+	idStatus = searchForID(fp, productId);
+
+	if (idStatus == ERROR)
+	{
+
 		return ERROR;
+
 	}
-	else if (idStatus == NOT_USED) {
+	else if (idStatus == NOT_USED)
+	{
+
 		return NOT_USED;
+
 	}
+
+
 
 	fseek(fp, sizeof(Products) * (productId - 1), SEEK_SET);
 	fread(&tempProduct, sizeof(Products), 1, fp);
-	printf("Product Id: %d\n", tempProduct.productId);
+	printf("Product Id: %d\n", tempProduct.productID);
 	printf("Product Name: %s\n", tempProduct.productName);
-	printf("Product Category: %s\n", tempProduct.productCatagory);
+	printf("Product Category: %s\n", tempProduct.productCategory);
 	printf("Product Quantity: %d\n", tempProduct.productQuantity);
 	printf("Product Price: %.2f\n", tempProduct.productPrice);
+
 	return SUCCESS;
+
 }
+
+
 
 /*
 * Function		:searchForId(FILE* fp, int productId)
@@ -147,20 +148,42 @@ int printByProductId(int productId, FILE* fp) {
 *				:int productId, an integer representing the product id to be searching for
 * Returns		:int, an integer representing the status of the product id (used, not used, or error)
 */
-int searchForId(FILE* fp, int productId) {
+
+int searchForID(FILE* fp, int productID)
+{
+
 	Products product = { 0 };
-	if (productId <= 0) {
+
+	if (productID <= 0)
+	{
+
 		return ERROR;
+
 	}
-	fseek(fp, sizeof(Products) * (productId - 1), SEEK_SET);
-	if (fread(&product, sizeof(Products), 1, fp) != 1) {
+
+
+
+	fseek(fp, sizeof(Products) * (productID - 1), SEEK_SET);
+
+	if (fread(&product, sizeof(Products), 1, fp) != 1)
+	{
+
 		return NOT_USED;
+
 	}
-	if (product.isDeleted == true) {
+	if (product.isDeleted == true)
+	{
+
 		return NOT_USED;
+
 	}
+
+
 	return IS_USED;
+
 }
+
+
 
 /*
 * Function		:addProduct(Products newProduct, FILE* fp)
@@ -169,19 +192,35 @@ int searchForId(FILE* fp, int productId) {
 *				:FILE* fp, a file pointer to the database file
 * Returns		:int, an integer representing the success or error code
 */
-int addProduct(Products newProduct, FILE* fp) {
-	if (searchForId(fp, newProduct.productId) == IS_USED) {
-		return ERROR;
+
+int addProductRA(Products newProduct, FILE* fp)
+{
+
+	if (searchForID(fp, newProduct.productID) == IS_USED)
+	{
+
+		return IS_USED;
+
 	}
+
+
+
 	//Make sure product information is valid according to specifications
-	if (newProduct.productName != NULL && newProduct.productCatagory != NULL 
-		&& newProduct.productQuantity >= 0 && newProduct.productPrice > 0) {
-		fseek(fp, sizeof(Products) * (newProduct.productId - 1), SEEK_SET);
+	if (newProduct.productName != NULL && newProduct.productCategory != NULL
+		&& newProduct.productQuantity >= 0 && newProduct.productPrice > 0)
+	{
+
+		fseek(fp, sizeof(Products) * (newProduct.productID - 1), SEEK_SET);
 		fwrite(&newProduct, sizeof(Products), 1, fp);
 		return SUCCESS;
+
 	}
+
 	return PRODUCT_STANDARD;
+
 }
+
+
 
 /*
 * Function		:deleteProduct(int productId, FILE* fp)
@@ -190,16 +229,31 @@ int addProduct(Products newProduct, FILE* fp) {
 *				:FILE* fp, a file pointer to the database file
 * Returns		:int, an integer representing the success or error code
 */
-int deleteProduct(int productId, FILE* fp) {
-	Products productToBeDeleted = { productId, "DELETED", "DELETED", 0, 0, true };
-	if (searchForId(fp, productId) == IS_USED) {
-		if (updateProduct(productToBeDeleted, fp) == ERROR) {
+
+int deleteProductRA(int productID, FILE* fp)
+{
+
+	Products productToBeDeleted = { productID, "DELETED", "DELETED", 0, 0, true };
+
+	if (searchForID(fp, productID) == IS_USED)
+	{
+
+		if (updateProductRA(productToBeDeleted, fp) == ERROR)
+		{
+
 			return ERROR;
+
 		}
+
 		return SUCCESS;
+
 	}
+
 	return ERROR;
+
 }
+
+
 
 /*
 * Function		:updateProduct(Products updatedProduct, FILE* fp)
@@ -208,10 +262,18 @@ int deleteProduct(int productId, FILE* fp) {
 *				:FILE* fp, a file pointer to the database file
 * Returns		:int, an integer representing the success or error code
 */
-int updateProduct(Products updatedProduct, FILE* fp) {
-	fseek(fp, sizeof(Products) * (updatedProduct.productId - 1), SEEK_SET);
-	if (fwrite(&updatedProduct, sizeof(Products), 1, fp) != 1) {
+
+int updateProductRA(Products updatedProduct, FILE* fp)
+{
+
+	fseek(fp, sizeof(Products) * (updatedProduct.productID - 1), SEEK_SET);
+	if (fwrite(&updatedProduct, sizeof(Products), 1, fp) != 1)
+	{
+
 		return ERROR;
+
 	}
+
 	return SUCCESS;
+
 }

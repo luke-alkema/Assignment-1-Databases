@@ -127,10 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CSV.c" />
-    <ClCompile Include="RandomAccess.c" />
-    <ClCompile Include="SequentialAccess.c" />
-    <ClCompile Include="Source.c" />
+    <ClCompile Include="RandomAccess.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="CSV.cpp" />
+    <ClCompile Include="SequentialAccess.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headerFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
