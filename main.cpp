@@ -174,30 +174,46 @@ void randomAccessOperations()
 
     if ((fp = fopen(FILENAME_RANDOM, "r+b")) == NULL)
     {
-
+        
         printf("ERROR: Failed to open file, closing program.\n");
       
 
     }
 
     // Add new products
-    isError(addProductRA(defaultLaptop, fp)); 
-    isError(addProductRA(smartPhone, fp)); 
+    if (isError(addProductRA(defaultLaptop, fp)) != SUCCESS) {
+        return;
+    }
+    if (isError(addProductRA(smartPhone, fp)) != SUCCESS) {
+        return;
+    }
 
     //Display products
-    isError(printByRAProductID(defaultLaptop.productID, fp));
-    isError(printByRAProductID(smartPhone.productID, fp));
+    if (isError(printByRAProductID(defaultLaptop.productID, fp)) != SUCCESS) {
+        return;
+    }
+    if (isError(printByRAProductID(smartPhone.productID, fp)) != SUCCESS) {
+        return;
+    }
 
     //Update Laptop to Dell Laptop 
-    isError(updateProductRA(updatedProduct, fp)); 
+    if (isError(updateProductRA(updatedProduct, fp)) != SUCCESS) {
+        return;
+    }
 
     //Display new output
-    isError(printByRAProductID(1, fp)); 
+	if (isError(printByRAProductID(1, fp)) != SUCCESS) {
+		return;
+	}
 
     //Delete Smartphone
-    isError(deleteProductRA(smartPhone.productID, fp)); 
+	if (isError(deleteProductRA(smartPhone.productID, fp)) != SUCCESS) {
+		return;
+	}
     //Show it wont print
-    isError(printByRAProductID(2, fp)); 
+    if (isError(printByRAProductID(2, fp)) != SUCCESS) {
+        return;
+    }
 
 
     // Check if file is NULL before attempting to close 

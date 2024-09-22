@@ -50,7 +50,7 @@ int isError(int errorCode)
 	{
 
 		printf("ERROR: Requested operation resulted in an error\n");
-		exit(ERROR);
+		return ERROR;
 		break;
 
 	}
@@ -58,7 +58,7 @@ int isError(int errorCode)
 	{
 
 		printf("ERROR: The ID given does not match any product id\n");
-		exit(NOT_USED);
+		return NOT_USED;
 		break;
 
 	}
@@ -66,7 +66,7 @@ int isError(int errorCode)
 	{
 
 		printf("ERROR: The ID given is already in use by another product\n");
-		exit(IS_USED);
+		return IS_USED;
 		break;
 
 	}
@@ -74,20 +74,21 @@ int isError(int errorCode)
 	{
 
 		return SUCCESS;
+		break;
 
 	}
 	case PRODUCT_STANDARD:
 	{
 
-		exit(PRODUCT_STANDARD);
+		return PRODUCT_STANDARD;
+		break;
 
 	}
 	default:
 
 		printf("ERROR: Unknown Error Occurred\n");
-		exit(UNKNOWN_ERROR);
+		return UNKNOWN_ERROR;
 		break;
-
 	}
 }
 
@@ -198,7 +199,7 @@ int addProductRA(Products newProduct, FILE* fp)
 	if (searchForID(fp, newProduct.productID) == IS_USED)
 	{
 
-		return ERROR;
+		return IS_USED;
 
 	}
 
